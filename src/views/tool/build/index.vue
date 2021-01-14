@@ -425,7 +425,7 @@ input, textarea{
 // home
 .right-scrollbar {
   .el-scrollbar__view {
-    padding: 12px 18px 15px 15px;
+    //padding: 12px 18px 15px 15px;
   }
 }
 .left-scrollbar .el-scrollbar__wrap {
