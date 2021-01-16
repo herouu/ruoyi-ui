@@ -1,44 +1,63 @@
 <template>
-  <div id="tags-view-container" class="tags-view-container">
-    <scroll-pane ref="scrollPane" class="tags-view-wrapper" @scroll="handleScroll">
-      <router-link
-        v-for="tag in visitedViews"
-        ref="tag"
-        :key="tag.path"
-        :class="isActive(tag)?'active':''"
-        :to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }"
-        tag="span"
-        class="tags-view-item"
-        :style="activeStyle(tag)"
-        @click.middle.native="!isAffix(tag)?closeSelectedTag(tag):''"
-        @contextmenu.prevent.native="openMenu(tag,$event)"
-      >
-        {{ tag.title }}
-        <span v-if="!isAffix(tag)" class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
-      </router-link>
-    </scroll-pane>
-    <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
-      <li @click="refreshSelectedTag(selectedTag)">刷新页面</li>
-      <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)">关闭当前</li>
-      <li @click="closeOthersTags">关闭其他</li>
-      <li @click="closeAllTags(selectedTag)">关闭所有</li>
-    </ul>
+  <div id="tags-view-container" class="tabs-bar-container">
+    <el-tabs
+      v-model="tabActive"
+      type="card"
+      class="tabs-content"
+      @tab-click="handleTabClick"
+      @tab-remove="handleTabRemove"
+    >
+      <el-tab-pane
+        v-for="item in visitedViews"
+        :key="item.path"
+        :label="item.meta.title"
+        :name="item.path"
+        :closable="!isAffix(item)"
+      ></el-tab-pane>
+    </el-tabs>
+    <el-dropdown @command="handleCommand">
+      <span style="cursor: pointer">
+        更多操作
+        <i class="el-icon-arrow-down el-icon--right"></i>
+      </span>
+      <el-dropdown-menu slot="dropdown" class="tabs-more">
+        <!-- <el-dropdown-item command="refreshRoute">
+          <vab-icon :icon="['fas', 'circle-notch']" />
+          刷新
+        </el-dropdown-item> -->
+        <el-dropdown-item command="closeOtherstabs">
+          <i class="el-icon-circle-close"></i>
+          关闭其他
+        </el-dropdown-item>
+        <el-dropdown-item command="closeLefttabs">
+          <i class="el-icon-circle-close"></i>
+          关闭左侧
+        </el-dropdown-item>
+        <el-dropdown-item command="closeRighttabs">
+          <i class="el-icon-circle-close"></i>
+          关闭右侧
+        </el-dropdown-item>
+        <el-dropdown-item command="closeAlltabs">
+          <i class="el-icon-circle-close"></i>
+          关闭全部
+        </el-dropdown-item>
+      </el-dropdown-menu>
+    </el-dropdown>
   </div>
 </template>
 
 <script>
-import ScrollPane from './ScrollPane'
 import path from 'path'
 
 export default {
-  components: { ScrollPane },
   data() {
     return {
       visible: false,
       top: 0,
       left: 0,
       selectedTag: {},
-      affixTags: []
+      affixTags: [],
+      tabActive: "",
     }
   },
   computed: {
@@ -53,32 +72,24 @@ export default {
     }
   },
   watch: {
-    $route() {
-      this.addTags()
-      this.moveToCurrentTag()
+    $route:{
+      handler(route) {
+        this.initTags();
+        this.addTags();
+        let tabActive = "";
+        this.visitedViews.forEach((item, index) => {
+          if (item.path === this.$route.path) {
+            tabActive = item.path;
+          }
+        });
+        this.tabActive = tabActive;
+      },
+      immediate: true,
     },
-    visible(value) {
-      if (value) {
-        document.body.addEventListener('click', this.closeMenu)
-      } else {
-        document.body.removeEventListener('click', this.closeMenu)
-      }
-    }
-  },
-  mounted() {
-    this.initTags()
-    this.addTags()
   },
   methods: {
     isActive(route) {
       return route.path === this.$route.path
-    },
-    activeStyle(tag) {
-      if (!this.isActive(tag)) return {};
-      return {
-        "background-color": this.theme,
-        "border-color": this.theme
-      };
     },
     isAffix(tag) {
       return tag.meta && tag.meta.affix
@@ -120,21 +131,6 @@ export default {
       }
       return false
     },
-    moveToCurrentTag() {
-      const tags = this.$refs.tag
-      this.$nextTick(() => {
-        for (const tag of tags) {
-          if (tag.to.path === this.$route.path) {
-            this.$refs.scrollPane.moveToTarget(tag)
-            // when query is different then update
-            if (tag.to.fullPath !== this.$route.fullPath) {
-              this.$store.dispatch('tagsView/updateVisitedView', this.$route)
-            }
-            break
-          }
-        }
-      })
-    },
     refreshSelectedTag(view) {
       this.$store.dispatch('tagsView/delCachedView', view).then(() => {
         const { fullPath } = view
@@ -152,11 +148,17 @@ export default {
         }
       })
     },
-    closeOthersTags() {
-      this.$router.push(this.selectedTag).catch(()=>{});
-      this.$store.dispatch('tagsView/delOthersViews', this.selectedTag).then(() => {
-        this.moveToCurrentTag()
-      })
+    async closeLefttabs() {
+      const view = await this.toThisTag();
+      await this.$store.dispatch("tagsView/delLeftRoutes", view);
+    },
+    async closeRighttabs() {
+      const view = await this.toThisTag();
+      await this.$store.dispatch("tagsView/delRightRoutes", view);
+    },
+    async closeOthersTags() {
+      const view = await this.toThisTag();
+      await this.$store.dispatch('tagsView/delOthersViews', view);
     },
     closeAllTags(view) {
       this.$store.dispatch('tagsView/delAllViews').then(({ visitedViews }) => {
@@ -181,125 +183,128 @@ export default {
         }
       }
     },
-    openMenu(tag, e) {
-      const menuMinWidth = 105
-      const offsetLeft = this.$el.getBoundingClientRect().left // container margin left
-      const offsetWidth = this.$el.offsetWidth // container width
-      const maxLeft = offsetWidth - menuMinWidth // left boundary
-      const left = e.clientX - offsetLeft + 15 // 15: margin right
-
-      if (left > maxLeft) {
-        this.left = maxLeft
+    handleTabClick(tab) {
+      const route = this.visitedViews.filter((item, index) => {
+        if (tab.index == index) return item;
+      })[0];
+      if (this.$route.path !== route.path) {
+        this.$router.push({
+          path: route.path,
+          query: route.query,
+          fullPath: route.fullPath,
+        });
       } else {
-        this.left = left
+        return false;
       }
-
-      this.top = e.clientY
-      this.visible = true
-      this.selectedTag = tag
     },
-    closeMenu() {
-      this.visible = false
+    async handleTabRemove(tabActive) {
+      let view;
+      this.visitedViews.forEach((item, index) => {
+        if (tabActive == item.path) {
+          view = item;
+        }
+      });
+      const { visitedViews } = await this.$store.dispatch(
+        "tagsView/delView",
+        view
+      );
+      if (this.isActive(view)) {
+        this.toLastView(visitedViews, view);
+      }
     },
-    handleScroll() {
-      this.closeMenu()
-    }
+    async toThisTag() {
+      const view = this.visitedViews.filter((item, index) => {
+        if (item.path === this.$route.fullPath) {
+          return item;
+        }
+      })[0];
+      if (this.$route.path !== view.path) this.$router.push(view);
+      return view;
+    },
+    handleCommand(command) {
+      switch (command) {
+        case "refreshRoute":
+          this.refreshSelectedTag();
+          break;
+        case "closeOtherstabs":
+          this.closeOthersTags();
+          break;
+        case "closeLefttabs":
+          this.closeLefttabs();
+          break;
+        case "closeRighttabs":
+          this.closeRighttabs();
+          break;
+        case "closeAlltabs":
+          this.closeAllTags();
+          break;
+      }
+    },
   }
 }
 </script>
-
 <style lang="scss" scoped>
-.tags-view-container {
-  height: 40px;
-  width: 100%;
-  background: #fff;
-  border-bottom: 1px solid #d8dce5;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
-  .tags-view-wrapper {
-    .tags-view-item {
-      display: inline-block;
-      position: relative;
-      cursor: pointer;
-      height: 32px;
-      line-height: 32px;
-      border: 1px solid #d8dce5;
-      color: #495060;
-      background: #fff;
-      padding: 0 8px;
-      font-size: 16px;
-      margin-left: 6px;
-      margin-top: 4px;
-      &:first-of-type {
-        margin-left: 15px;
+@import "~@/assets/styles/variables.scss";
+.tabs-bar-container {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  align-content: center;
+  align-items: center;
+  justify-content: space-between;
+  height: $base-tabs-bar-height;
+  padding-right: $base-padding;
+  padding-left: $base-padding;
+  user-select: none;
+  background: $base-color-white;
+  border-top: 1px solid #f6f6f6;
+
+  ::v-deep {
+    .fold-unfold {
+      margin-right: $base-padding;
+    }
+  }
+
+  .tabs-content {
+    width: calc(100% - 90px);
+    height: $base-tag-item-height;
+
+    ::v-deep {
+      .el-tabs__nav-next,
+      .el-tabs__nav-prev {
+        height: $base-tag-item-height;
+        line-height: $base-tag-item-height;
       }
-      &:last-of-type {
-        margin-right: 15px;
-      }
-      &.active {
-        background-color: #42b983;
-        color: #fff;
-        border-color: #42b983;
-        &::before {
-          content: '';
-          background: #fff;
-          display: inline-block;
-          width: 10px;
-          height: 10px;
-          border-radius: 50%;
-          position: relative;
-          margin-right: 3px;
+
+      .el-tabs__header {
+        border-bottom: 0;
+
+        .el-tabs__nav {
+          border: 0;
+        }
+
+        .el-tabs__item {
+          box-sizing: border-box;
+          height: $base-tag-item-height;
+          margin-right: 5px;
+          line-height: $base-tag-item-height;
+          border: 1px solid $base-border-color;
+          border-radius: $base-border-radius;
+          transition: padding 0.3s cubic-bezier(0.645, 0.045, 0.355, 1) !important;
+
+          &.is-active {
+            border: 1px solid $base-color-blue;
+          }
         }
       }
     }
   }
-  .contextmenu {
-    margin: 0;
-    background: #fff;
-    z-index: 3000;
-    position: absolute;
-    list-style-type: none;
-    padding: 5px 0;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 400;
-    color: #333;
-    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, .3);
-    li {
-      margin: 0;
-      padding: 7px 16px;
-      cursor: pointer;
-      &:hover {
-        background: #eee;
-      }
-    }
-  }
-}
-</style>
 
-<style lang="scss">
-//reset element css of el-icon-close
-.tags-view-wrapper {
-  .tags-view-item {
-    .el-icon-close {
-      width: 14px;
-      height: 14px;
-      vertical-align: -1px;
-      border-radius: 50%;
-      position: relative;
-      text-align: center;
-      transition: all .3s cubic-bezier(.645, .045, .355, 1);
-      transform-origin: 100% 50%;
-      &:before {
-        transform: scale(.8);
-        position: relative;
-        display: inline-block;
-        //vertical-align: inherit;
-      }
-      &:hover {
-        background-color: #b4bccc;
-        color: #fff;
-      }
-    }
+  .more {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    cursor: pointer;
   }
 }
 </style>

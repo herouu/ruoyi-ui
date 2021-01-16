@@ -62,7 +62,21 @@ const mutations = {
         break
       }
     }
-  }
+  },
+  delLeftVisitedRoute(state, route) {
+    let index = state.visitedViews.length
+    state.visitedViews = state.visitedViews.filter((item) => {
+      if (item.name === route.name) index = state.visitedViews.indexOf(item)
+      return item.meta.affix || index <= state.visitedViews.indexOf(item)
+    })
+  },
+  delRightVisitedRoute(state, route) {
+    let index = state.visitedViews.length
+    state.visitedViews = state.visitedViews.filter((item) => {
+      if (item.name === route.name) index = state.visitedViews.indexOf(item)
+      return item.meta.affix || index >= state.visitedViews.indexOf(item)
+    })
+  },
 }
 
 const actions = {
@@ -132,6 +146,26 @@ const actions = {
         cachedViews: [...state.cachedViews]
       })
     })
+  },
+  async delLeftRoutes({ dispatch, state }, route) {
+    await dispatch('delLeftVisitedRoute', route)
+    return {
+      visitedViews: [...state.visitedViews],
+    }
+  },
+  async delRightRoutes({ dispatch, state }, route) {
+    await dispatch('delRightVisitedRoute', route)
+    return {
+      visitedViews: [...state.visitedViews],
+    }
+  },
+  delLeftVisitedRoute({ commit, state }, route) {
+    commit('delLeftVisitedRoute', route)
+    return [...state.visitedViews]
+  },
+  delRightVisitedRoute({ commit, state }, route) {
+    commit('delRightVisitedRoute', route)
+    return [...state.visitedViews]
   },
   delAllVisitedViews({ commit, state }) {
     return new Promise(resolve => {

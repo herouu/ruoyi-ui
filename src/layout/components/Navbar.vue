@@ -104,7 +104,7 @@ export default {
 
 <style lang="scss" scoped>
 .navbar {
-  height: 64px;
+  height: 50px;
   overflow: hidden;
   position: relative;
   background: #fff;
@@ -163,13 +163,13 @@ export default {
       margin-right: 30px;
 
       .avatar-wrapper {
-        margin-top: 5px;
+        margin-top: 7px;
         position: relative;
 
         .user-avatar {
           cursor: pointer;
-          width: 40px;
-          height: 40px;
+          width: 35px;
+          height: 35px;
           border-radius: 50%;
         }
 
