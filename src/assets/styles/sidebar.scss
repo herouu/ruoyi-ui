@@ -5,7 +5,7 @@
     transition: margin-left .28s;
     margin-left: $sideBarWidth;
     position: relative;
-    background-color: #F0F2F5;
+    background-color: $base-color-background;
   }
 
   .sidebar-container {
@@ -79,10 +79,14 @@
       &:hover {
         background-color: rgba(0, 0, 0, 0.06) !important;
       }
+      &.is-active{
+        color:$subMenuActiveText !important;
+        background-color: $subMenuHover !important;
+      }
     }
 
     & .theme-dark .is-active > .el-submenu__title {
-      color: $subMenuActiveText !important;
+      color: $menuActiveText !important;
     }
 
     & .nest-menu .el-submenu>.el-submenu__title,
@@ -92,14 +96,22 @@
       &:hover {
         background-color: rgba(0, 0, 0, 0.06) !important;
       }
+      &.is-active{
+        color:$subMenuActiveText !important;
+        background-color: $base-menu-background-active !important;
+      }
+
     }
 
     & .theme-dark .nest-menu .el-submenu>.el-submenu__title,
     & .theme-dark .el-submenu .el-menu-item {
       background-color: $subMenuBg !important;
-
       &:hover {
         background-color: $subMenuHover !important;
+      }
+      &.is-active{
+        color:$subMenuActiveText !important;
+        background-color: $base-menu-background-active !important;
       }
     }
   }
@@ -220,7 +232,7 @@
     }
 
     &::-webkit-scrollbar-thumb {
-      background: #99a9bf;
+      background: #FFFFFF;
       border-radius: 20px;
     }
   }

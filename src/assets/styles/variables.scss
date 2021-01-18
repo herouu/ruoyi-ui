@@ -1,23 +1,16 @@
 // base color
-$blue: #324157;
-$light-blue: #409eff;
-$red: #C03639;
-$pink: #E65D6E;
-$green: #30B08F;
-$tiffany: #4AB7BD;
-$yellow: #FEC171;
-$panGreen: #30B08F;
+$base-color-default: #1890ff;
+$base-color-blue: $base-color-default;
 
 // base color hover
-$light-blue-hover: #66b1ff;
-
+$base-color-background: #F0F2F5;
 // sidebar
 $menuText: #e6e6e6;
-$menuActiveText: #409EFF;
-$subMenuActiveText: #f4f4f5; // https://github.com/ElemeFE/element/issues/12951
+$menuActiveText: #e6e6e6;
+$subMenuActiveText: #ffffff; // https://github.com/ElemeFE/element/issues/12951
 
-$menuBg: #001529;
-$menuHover: #ffffff;
+$menuBg: #20222A;
+$menuHover: $base-color-blue;
 $sidebarTitle: #FBF7EC;
 
 $menuLightBg: #ffffff;
@@ -25,29 +18,11 @@ $menuLightHover: #f0f1f5;
 $sidebarLightTitle: #001529;
 
 $subMenuBg: #20222A;
-$subMenuHover: #001528;
+$subMenuHover: $base-color-blue;
 
-$sideBarWidth: 256px;
+$sideBarWidth: 250px;
 
-// the :export directive is the magic sauce for webpack
-// https://www.bluematador.com/blog/how-to-share-variables-between-js-and-sass
-:export {
-  menuText: $menuText;
-  menuActiveText: $menuActiveText;
-  subMenuActiveText: $subMenuActiveText;
-  menuBg: $menuBg;
-  menuHover: $menuHover;
-  menuLightBg: $menuLightBg;
-  menuLightHover: $menuLightHover;
-  subMenuBg: $subMenuBg;
-  subMenuHover: $subMenuHover;
-  sideBarWidth: $sideBarWidth;
-  sidebarTitle: $sidebarTitle;
-  sidebarLightTitle: $sidebarLightTitle
-}
 
-//框架默认主题色
-$base-color-default: #1890ff;
 //默认层级
 $base-z-index: 999;
 //横向布局纵向布局时菜单背景色
@@ -67,7 +42,6 @@ $base-font-size-big: 16px;
 $base-font-size-bigger: 18px;
 $base-font-size-max: 22px;
 $base-font-color: #606266;
-$base-color-blue: $base-color-default;
 $base-color-green: #13ce66;
 $base-color-white: #fff;
 $base-color-black: #000;
@@ -121,4 +95,16 @@ $base-transition-time: 0.3s;
   menu-color-active: $base-menu-color-active;
   //菜单背景色变量导出
   menu-background: $base-menu-background;
+  menuText: $menuText;
+  menuActiveText: $menuActiveText;
+  subMenuActiveText: $subMenuActiveText;
+  menuBg: $menuBg;
+  menuHover: $menuHover;
+  menuLightBg: $menuLightBg;
+  menuLightHover: $menuLightHover;
+  subMenuBg: $subMenuBg;
+  subMenuHover: $subMenuHover;
+  sideBarWidth: $sideBarWidth;
+  sidebarTitle: $sidebarTitle;
+  sidebarLightTitle: $sidebarLightTitle
 }
