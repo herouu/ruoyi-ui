@@ -1,15 +1,5 @@
 @import './variables.scss';
 
-// 按钮颜色
-$blue: #324157;
-$light-blue: #409eff;
-$red: #C03639;
-$pink: #E65D6E;
-$green: #30B08F;
-$tiffany: #4AB7BD;
-$yellow: #FEC171;
-$panGreen: #30B08F;
-
 @mixin colorBtn($color) {
   background: $color;
 
@@ -96,8 +86,8 @@ $panGreen: #30B08F;
   line-height: 1;
   white-space: nowrap;
   cursor: pointer;
-  background: $base-color-white;
-  color: $base-color-white;
+  background: #fff;
+  color: #fff;
   -webkit-appearance: none;
   text-align: center;
   box-sizing: border-box;
@@ -107,5 +97,3 @@ $panGreen: #30B08F;
   font-size: 14px;
   border-radius: 4px;
 }
-
-

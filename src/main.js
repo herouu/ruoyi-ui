@@ -3,9 +3,7 @@ import Vue from 'vue'
 import Cookies from 'js-cookie'
 
 import Element from 'element-ui'
-import './assets/styles/element-variables.scss'
-
-import '@/assets/styles/index.scss' // global css
+import '@/styles/index.scss' // global css
 import App from './App'
 import store from './store'
 import router from './router'

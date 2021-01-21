@@ -244,7 +244,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-@import "~@/assets/styles/variables.scss";
+@import "~@/styles/variables.scss";
 .tabs-bar-container {
   position: relative;
   box-sizing: border-box;
