@@ -94,7 +94,7 @@
           </el-col>
           <el-col :span="1.5">
             <el-button
-              type="success"
+              type="primary"
               icon="el-icon-edit"
               size="mini"
               :disabled="single"
@@ -104,7 +104,7 @@
           </el-col>
           <el-col :span="1.5">
             <el-button
-              type="danger"
+              type="primary"
               icon="el-icon-delete"
               size="mini"
               :disabled="multiple"
@@ -114,7 +114,7 @@
           </el-col>
           <el-col :span="1.5">
             <el-button
-              type="info"
+              type="primary"
               icon="el-icon-upload2"
               size="mini"
               @click="handleImport"
@@ -123,7 +123,7 @@
           </el-col>
           <el-col :span="1.5">
             <el-button
-              type="warning"
+              type="primary"
               icon="el-icon-download"
               size="mini"
               @click="handleExport"

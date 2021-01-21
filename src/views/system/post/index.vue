@@ -39,7 +39,7 @@
       <el-col :span="1.5">
         <el-button
           type="primary"
-          plain
+
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
@@ -48,35 +48,38 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="success"
-          plain
+          type="primary"
+
           icon="el-icon-edit"
           size="mini"
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['system:post:edit']"
-        >修改</el-button>
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="danger"
-          plain
+          type="primary"
+
           icon="el-icon-delete"
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['system:post:remove']"
-        >删除</el-button>
+        >删除
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="warning"
-          plain
+          type="primary"
+
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
           v-hasPermi="['system:post:export']"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -112,7 +115,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"

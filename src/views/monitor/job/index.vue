@@ -40,7 +40,7 @@
       <el-col :span="1.5">
         <el-button
           type="primary"
-          plain
+
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
@@ -49,40 +49,42 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="success"
-          plain
+          type="primary"
+
           icon="el-icon-edit"
           size="mini"
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['monitor:job:edit']"
-        >修改</el-button>
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="danger"
-          plain
+          type="primary"
+
           icon="el-icon-delete"
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['monitor:job:remove']"
-        >删除</el-button>
+        >删除
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="warning"
-          plain
+          type="primary"
+
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
           v-hasPermi="['monitor:job:export']"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="info"
-          plain
+          type="primary"
           icon="el-icon-s-operation"
           size="mini"
           @click="handleJobLog"

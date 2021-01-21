@@ -59,7 +59,7 @@
       <el-col :span="1.5">
         <el-button
           type="primary"
-          plain
+
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
@@ -68,45 +68,49 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="success"
-          plain
+          type="primary"
+
           icon="el-icon-edit"
           size="mini"
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['system:dict:edit']"
-        >修改</el-button>
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="danger"
-          plain
+          type="primary"
+
           icon="el-icon-delete"
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['system:dict:remove']"
-        >删除</el-button>
+        >删除
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="warning"
-          plain
+          type="primary"
+
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
           v-hasPermi="['system:dict:export']"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="danger"
-          plain
+          type="primary"
+
           icon="el-icon-refresh"
           size="mini"
           @click="handleClearCache"
           v-hasPermi="['system:dict:remove']"
-        >清理缓存</el-button>
+        >清理缓存
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>

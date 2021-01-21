@@ -41,7 +41,7 @@
       <el-col :span="1.5">
         <el-button
           type="primary"
-          plain
+
           icon="el-icon-download"
           size="mini"
           @click="handleGenTable"
@@ -50,35 +50,38 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="info"
-          plain
+          type="primary"
+
           icon="el-icon-upload"
           size="mini"
           @click="openImportTable"
           v-hasPermi="['tool:gen:import']"
-        >导入</el-button>
+        >导入
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="success"
-          plain
+          type="primary"
+
           icon="el-icon-edit"
           size="mini"
           :disabled="single"
           @click="handleEditTable"
           v-hasPermi="['tool:gen:edit']"
-        >修改</el-button>
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="danger"
-          plain
+          type="primary"
+
           icon="el-icon-delete"
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['tool:gen:remove']"
-        >删除</el-button>
+        >删除
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
